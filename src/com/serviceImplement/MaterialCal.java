@@ -18,7 +18,7 @@ public class MaterialCal implements MaterialManagement {
 	public int sandCal(int count) throws LessThanZeroException //sand amount calculation count must be positive value
 {
 		if(count>=0) {
-		count = count*db.getRates("sand");
+		count = count* serviceImplement.getRates getRates("sand");
 		return count;
 	}else {
 		throw new LessThanZeroException("Sand count must be positive value");

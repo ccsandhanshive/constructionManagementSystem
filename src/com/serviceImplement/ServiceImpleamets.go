@@ -1,111 +1,98 @@
 package serviceImplement
 
-type ServiceImpleamets struct {
-	//Statement s;
-	//PreparedStatement p;
-	int n
-	//ResultSet rs;
-	int userid
-}
+import "bitsys.sys/construction_management_system/bean"
+
 	//if Commit ==1 then and then only data will be save on database after save data in database user cannot be modify it only Contractor can be deleted this record 
 	//and only supervisor has authority to add data and modify before save	its applicable to all operations
 	//	Connection con=ConnectionProvider.provideConnection();
-	//	int c;
+	c int;
 //		DatabaseImplements d=new DatabaseImplements();
-	func DataEntry(String sitename, String date, int no_of_labor[], int no_of_worker[],int no_of_watchman,int commit) string {
-		//Labor l;
-		//Worker w;
-		//Watchman w1;
+	func DataEntry(sitename string,date string,no_of_labor []int,no_of_worker []int,no_of_watchman int,commit int) string {
+		var l Labor 
+		var w Worker
+		var w1 Watchman
 		var labor_amt int				//total amount of labor
 		var worker_amt int			//total amount of workers
 		var watchman_amt int			//total amount of watchman
-		 int total_amt=0;				//total amount
-		 int lcount=0;				//count total number of labors
-		 int wcount=0;				//count total number of worker
+		var total_amt int				//total amount
+		var lcount int				//count total number of labors
+		var wcount int				//count total number of worker
 		 
-		for(int i=0;i<no_of_labor.length;i++) //counting labors
-		{
-			lcount+=no_of_labor[i];
+		for i:=0; i<len(no_of_labor); i++ {
+			lcount+=no_of_labor[i]
 		}
 		
-		for(int i=0;i<no_of_worker.length;i++)	//counting workers
-		{
+		for i=0; i<len(no_of_worker); i++ {
 			wcount+=no_of_worker[i];
 		}
-		labor_amt=lcount*d.getRates("labor");			//get rate from rate table and multiply by there counts
-		worker_amt=wcount*d.getRates("worker");
-		watchman_amt=no_of_watchman*d.getRates("watchman");
-		total_amt=labor_amt+worker_amt+watchman_amt;
-		l=new Labor(lcount,labor_amt);
-		w=new Worker(wcount,worker_amt);
-		w1=new Watchman(no_of_watchman,watchman_amt);
-		if(commit==1)									//if user wish to sava data in database
-		d.dataEntry(sitename, date,lcount,labor_amt, wcount,worker_amt,no_of_watchman,watchman_amt,total_amt);
-		
+		labor_amt=lcount* ServiceImpleamets.GetRates("labor")			//get rate from rate table and multiply by there counts
+		worker_amt=wcount* ServiceImpleamets.GetRates("worker")
+		watchman_amt=no_of_watchman* ServiceImpleamets.GetRates("watchman")
+		total_amt=labor_amt+worker_amt+watchman_amt
+		l= bean.CreateLabor(lcount,labor_amt);
+		w= bean.CreateWorker(wcount,worker_amt)
+		w1= bean.CreateWatchman(no_of_watchman,watchman_amt);
+		if commit == 1 {									//if user wish to sava data in database
+		DataEntry(sitename, date,lcount,labor_amt, wcount,worker_amt,no_of_watchman,watchman_amt,total_amt);
+		}
 		return l+"\n"+w+"\n"+w1+"\ntotal amt="+total_amt;			//print all details for check
 
 		
 	}
 
 
-	public int retriveData(String sitename,int commit)	//	retrieve data of site  
-	{
-		if(commit==1)
-		c=d.retriveData(sitename);
-		return c;
+	func RetriveData(sitename string,commit int) int {
+		if commit == 1 {
+		c = RetriveData(sitename) }
+		return c
 	}
 
 	
-	public int retriveData(String sitename, String date,int commit)		//retrieve data using site name and date 
-	{
-		if(commit==1)
-		c=d.retriveData(sitename, date);
-		return c;
+	func RetriveData(sitename string,date string,commit int) int{
+		if commit == 1 {c = RetriveData(sitename, date)}
+		
+		return c
 	}
 
 	
-	public int deleteData(String sitename,int commit)					//delete all record of site
-	{
-		if(commit==1)
-		c=d.deleteData(sitename);
-		return c;
+	func DeleteData(sitename string,commit int)	int{
+		if commit == 1 {c =  DeleteData(sitename);}
+		
+		return c
 	}
 
 	
-	public int deleteData(String sitename, String date,int commit) 			//delete record of specific site and date
-	{
-		if(commit==1)
-		c=d.deleteData(sitename, date);
-		return c;
+	func DeleteData( sitename string,date string,commit int) int {
+		if commit == 1 {c = DeleteData(sitename, date)}
+		
+		return c
 	}
 
 	
-	public int laborRateChange(int rate,int commit)						//Change in Labor rates 
-	{
-		if(commit==1)
-		c=d.laborRateChange(rate);
-		return c;
+	func LaborRateChange(rate int,commit int) int {
+		if commit == 1 {c = LaborRateChange(rate)}
+		
+		return c
 	}
 
 	
-	public int workerRateChange(int rate,int commit)					//Change in worker rates
+	func WorkerRateChange(int rate,int commit)					//Change in worker rates
 	{
-		if(commit==1)
-		c=d.workerRateChange(rate);
-		return c;
+		if commit == 1 {c = workerRateChange(rate)}
+		return c
 	}
 
 	public int cementRateChange(int rate,int commit)					//Change in cement rates 
 	{
 		if(commit==1)
-		c=d.cementRateChange(rate);
+		c := d.cementRateChange(rate);
 		return c;
 	}
 
 	public int sandRateChange(int rate,int commit)						//Change in sand rates 
 	{
 		if(commit==1)
-		c=d.sandRateChange(rate);
+		c := d.sandRateChange(rate);
 		return c;
 	}
 
@@ -113,7 +100,7 @@ type ServiceImpleamets struct {
 	public int brickRateChange(int rate,int commit)						//Change in Brick rate Changes 
 	{
 		if(commit==1)
-		c=d.brickRateChange(rate);
+		c := d.brickRateChange(rate);
 		return c;
 	}
 
