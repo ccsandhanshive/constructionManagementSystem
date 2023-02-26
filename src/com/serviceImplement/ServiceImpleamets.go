@@ -76,108 +76,82 @@ import "bitsys.sys/construction_management_system/bean"
 	}
 
 	
-	func WorkerRateChange(int rate,int commit)					//Change in worker rates
-	{
-		if commit == 1 {c = workerRateChange(rate)}
+	func WorkerRateChange(rate int,commit int)	int {
+		if commit == 1 {c = WorkerRateChange(rate)}
 		return c
 	}
 
-	public int cementRateChange(int rate,int commit)					//Change in cement rates 
-	{
-		if(commit==1)
-		c := d.cementRateChange(rate);
-		return c;
+	func CementRateChange(rate int,commit int)	int {
+		if commit==1 {c := CementRateChange(rate)}
+		return c
 	}
 
-	public int sandRateChange(int rate,int commit)						//Change in sand rates 
-	{
-		if(commit==1)
-		c := d.sandRateChange(rate);
-		return c;
+	func SandRateChange(rate int,commit int)	int {
+		if commit == 1 {c := SandRateChange(rate)}
+		return c
 	}
 
-
-	public int brickRateChange(int rate,int commit)						//Change in Brick rate Changes 
-	{
-		if(commit==1)
-		c := d.brickRateChange(rate);
-		return c;
+    func BrickRateChange(rate int,commit int)	int {
+		if commit == 1 {c := BrickRateChange(rate)}
+		return c
 	}
 
 
-	public String insertUser(String sitename, String role,int commit)		//Insert New User 
-	{
-		if(commit==1)
-		return d.insertUser(sitename, role);
-		
-		return null;
+	func InsertUser(sitename string,role string,commit int)	int {
+		if commit == 1 { return InsertUser(sitename, role) }
+		return 0;
 	}
 
 
-	public int supervisorSiteChange(int username, String newsite,int commit)		//Supervisor site Change 
-	{
-		if(commit==1)
-		c=d.supervisorSiteChange(username, newsite);
-		return c;
+	func SupervisorSiteChange(username int,newsite string,commit int)	int {
+		if commit == 1 {c = SupervisorSiteChange(username, newsite)}
+		return c
 	}
 
 
-	public int customerSiteChange(int username, String password, String sitename,int commit)	// Customer Site change in this case customer password is must
-	{
-		if(commit==1)
-		c=d.customerSiteChange(username, password, sitename);
-		return c;
+	func CustomerSiteChange(username int,password string,sitename string,commit int)	int {
+		if commit == 1 {c = CustomerSiteChange(username, password, sitename)}
+		return c
 	}
 	
-	public int watchmanRateChange(int rate,int commit)							//Change in Watchman Rate Change 
-	{
-		if(commit==1)
-			c=d.watchmanRateChange(rate);
-		return c;
+	func WatchmanRateChange(rate int,commit int)	int {
+		if commit == 1 {c = WatchmanRateChange(rate)}
+		return c
 	}
 	
-	public int deleteUser(int userid,int commit)								//Delete User 
-	{if(commit==1)
-		c=d.deleteUser(userid);
-	return c;
+	func DeleteUser(userid int,commit int) int  {
+		if commit == 1 {c = DeleteUser(userid)}
+	return c
 	}
 	
 	
-	public String retriveUser(int commit)										//Retrieve all User Data
-	{
-		if(commit==1)
-			d.retriveUser();
-		return null;
+	func RetriveUser(commit int) string {
+		if commit == 1 {return RetriveUser()}
+		return nil
+	}
+	func RetriveUser(userid int,commit int)	string {
+		if commit == 1 {return RetriveUser(userid)}
+		return nil
 	}
 	
-	
-	public String retriveUser(int userid,int commit)							//Retrieve User data using userid
-	{
-		if(commit==1)
-			d.retriveUser(userid);
-		return null;
+	func RetriveUser(role string,commit int) string {
+		if commit == 1 {return RetriveUser(role)}
+		return nil;
 	}
-	
-	public String retriveUser(String role,int commit)							//Retrieve User data via there role 
-	{
-		if(commit==1)
-			d.retriveUser(role);
-		return null;
-	}
-	MaterialCal mc=new MaterialCal();
-	public String materialEntry(String sitename,String date,int cement_count,int sand_count,int brick_count,int commit)
-	{int cement_amt=0;
-	int sand_amt=0;
-	int brick_amt=0;
-	 int total_amt=0;
+	var mc MaterialCal = CreateMaterialCal();
+	func MaterialEntry(String sitename,String date,int cement_count,int sand_count,int brick_count,int commit) string {
+	var cement_amt int
+	var sand_amt int
+	var brick_amt int
+	var total_amt int
 		try {
-		 cement_amt=mc.cementCal(cement_count);
-		sand_amt=mc.sandCal(sand_count);
-		  brick_amt=mc.brickCal(brick_count);
-		  total_amt=cement_amt+sand_amt+brick_amt;
-		 if(commit==1)
+		 cement_amt= mc.cementCal(cement_count);
+		sand_amt= mc.sandCal(sand_count);
+		  brick_amt = mc.brickCal(brick_count);
+		  total_amt = cement_amt+sand_amt+brick_amt;
+		 if commit == 1 {
 			 d.materialEntry(sitename, date, cement_count, cement_amt, sand_count, sand_amt, brick_count, brick_amt, total_amt);
-	
+		}
 	} catch (LessThanZeroException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
