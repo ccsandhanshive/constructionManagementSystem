@@ -1,5 +1,9 @@
 package bean
 
+import (
+	"fmt"
+)
+
 type Customer struct {
 	userid   int
 	password string
@@ -19,6 +23,9 @@ func (c Customer) getPassword() string {
 }
 func (c Customer) setPassword(password string) {
 	c.password = password
+}
+func (c Customer) String() string {
+	return fmt.Sprintf("Customer [userid=%d password=%s]", c.userid, c.password)
 }
 
 //@Override

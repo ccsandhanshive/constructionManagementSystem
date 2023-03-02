@@ -1,5 +1,9 @@
 package bean
 
+import (
+	"fmt"
+)
+
 type Watchman struct {
 	count int
 	sal   int
@@ -17,6 +21,9 @@ func (w Watchman) setCount(count int) {
 func (w Watchman) getSal() int {
 	return w.sal
 }
-func (w Watchman) setSal(int sal) {
+func (w Watchman) setSal(sal int) {
 	w.sal = sal
+}
+func (w Watchman) String() string {
+	return fmt.Sprintf(" Watchman [count=%d, sal=%d]", w.count, w.sal)
 }

@@ -16,7 +16,7 @@ type DatabaseImplements struct {
 //Connection con=ConnectionProvider.provideConnection();
 
 // @Override
-func DataEntry(sitename string, date string, no_of_labor int, labor_amt int, no_of_worker int, worker_amt int, no_of_watchman int, watchman_amt int, total_amt int) int {
+func DataEntry01(sitename string, date string, no_of_labor int, labor_amt int, no_of_worker int, worker_amt int, no_of_watchman int, watchman_amt int, total_amt int) int {
 	c := 1
 	/*
 		try {
@@ -41,7 +41,7 @@ func DataEntry(sitename string, date string, no_of_labor int, labor_amt int, no_
 	return c
 }
 
-func RetriveData01(sitename string) {
+func RetriveData01(sitename string) int {
 	/* try {
 		p=con.prepareStatement("select w.date_,w.no_of_labor,w.laber_amt,w.no_of_worker,w.worker_amt,w.no_of_watchman,w.watchman_amt,w1.cement_count,w1.cement_amt,w1.sand_count,w1.sand_amt,w1.brick_count,w1.brick_amt,w.total_amt+w1.total_amount as total_amount from "+sitename+" w,"+sitename+"Material w1 where w.date_=w1.date_");
 	rs=p.executeQuery();
@@ -57,9 +57,10 @@ func RetriveData01(sitename string) {
 	return 1;
 	} */
 	fmt.Println("Data retrived using sitename", "RetriveData01")
+	return 1
 }
 
-func RetriveData02(sitename string, date string) {
+func RetriveData02(sitename string, date string) int {
 	/* try {
 	p=con.prepareStatement("select\r\n" +
 			" w.date_,\r\n" +
@@ -89,6 +90,7 @@ func RetriveData02(sitename string, date string) {
 		//e.printStackTrace();
 	} */
 	fmt.Println("Data retrived using sitename and date", "RetriveData02")
+	return 1
 }
 
 func DeleteData01(sitename string) int {
@@ -264,6 +266,20 @@ func RetriveSite(userid int, pass string) []string {
 		e.printStackTrace();
 	} */
 	return s
+}
+func RetriveSite01(userid int, pass string) string {
+	/* try {
+		p=con.prepareStatement("select sitename from login where userid=? and password=?");
+		p.setInt(1,userid);
+		p.setString(2,pass);
+		rs=p.executeQuery();
+		rs.next();
+	 s=rs.getString(1);
+	} catch (SQLException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	} */
+	return "wagholi"
 }
 
 func WatchmanRateChange(rate int) int {

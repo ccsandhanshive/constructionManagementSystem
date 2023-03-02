@@ -1,5 +1,9 @@
 package bean
 
+import (
+	"fmt"
+)
+
 type Supervisor struct {
 	userid   int
 	password string
@@ -26,4 +30,7 @@ func (s Supervisor) getSitename() string {
 }
 func (s Supervisor) setSitename(sitename string) {
 	s.sitename = sitename
+}
+func (s Supervisor) String() string {
+	return fmt.Sprintf("Supervisor [userid=%d, password=%s ,sitename=%s]", s.userid, s.password, s.sitename)
 }

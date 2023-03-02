@@ -1,21 +1,29 @@
 package bean
 
-type Labor struct{
-laborcount int
-sal int
+import (
+	"fmt"
+)
+
+type Labor struct {
+	laborcount int
+	sal        int
 }
+
 func CreateLabor(laborcount int, sal int) Labor {
 	return Labor{laborcount: laborcount, sal: sal}
 }
-type (l Labor) getLaborcount() int{
-	return l.laborcount;
+func (l Labor) getLaborcount() int {
+	return l.laborcount
 }
-type (l Labor) setLaborcount(laborcount int) {
+func (l Labor) setLaborcount(laborcount int) {
 	l.laborcount = laborcount
 }
-type (l Labor) getSal() int{
-	return sal;
+func (l Labor) getSal() int {
+	return l.sal
 }
-type (l Labor) setSal(sal int) {
-	l.sal = sal;
+func (l Labor) setSal(sal int) {
+	l.sal = sal
+}
+func (l Labor) String() string {
+	return fmt.Sprintf("Labor [Labor=%d, sal=%d]", l.laborcount, l.sal)
 }

@@ -1,5 +1,9 @@
 package bean
 
+import (
+	"fmt"
+)
+
 type Contractor struct {
 	userid   int
 	password string
@@ -19,4 +23,7 @@ func (c Contractor) getPassword() string {
 }
 func (c Contractor) setPassword(password string) {
 	c.password = password
+}
+func (c Contractor) String() string {
+	return fmt.Sprintf("Contractor [userid=%d, password=%s]", c.userid, c.password)
 }

@@ -77,14 +77,17 @@ func supervisor(userid int, password string, u UserInterface) {
 	press = site(userid, password, s1) - 1
 	fmt.Println("Enter no of days")
 	fmt.Scanln(&days)
-	labor := [7]int{}
-	worker := [7]int{}
-
+	labor := []int{}
+	worker := []int{}
+	var tempInputlabor int
+	var tempInputWorker int
 	for i := 0; i < days; i++ {
 		fmt.Println("day " + strconv.Itoa(i) + " labor:")
-		fmt.Scanln(&labor[i])
+		fmt.Scanln(&tempInputlabor)
+		labor = append(labor, tempInputlabor)
 		fmt.Println("day " + strconv.Itoa(i) + " worker")
-		fmt.Scanln(&worker[i])
+		fmt.Scanln(&tempInputWorker)
+		worker = append(worker, tempInputWorker)
 		fmt.Println("")
 	}
 
@@ -101,9 +104,9 @@ func supervisor(userid int, password string, u UserInterface) {
 	var brick int
 	fmt.Scanln(&brick)
 
-	fmt.Println(s.dataEntry(s1[press], date, labor, worker, watchman, 0)) //for show temporary data before save in database
-	fmt.Println(s.materialEntry(s1[press], date, cement, sand, brick, 0))
-	fmt.Println("Save data \n1.yes \n2.no\n3.back")
+	fmt.Println(serviceImplement.DataEntry02(s1[press], date, labor, worker, watchman, 0)) //for show temporary data before save in database
+	fmt.Println(serviceImplement.MaterialEntrywithcommit(s1[press], date, cement, sand, brick, 0))
+	fmt.Println("Save data \n1.yes \n2.no \n3.back")
 	var press1 int
 	fmt.Scanln(&press1)
 	if press1 == 1 {
@@ -349,7 +352,7 @@ func (UserInterface) login(u UserInterface) {
 			mainSupervisor(userid, password, u)
 		} else if role == "customer" {
 			fmt.Println("Your site data:-")
-			//d.retriveData(d.retriveSite(userid, password))
+			serviceImplement.RetriveData01(serviceImplement.RetriveSite01(userid, password))
 			fmt.Println("End")
 			u.login(u)
 		} else if role == "contractor" {

@@ -1,5 +1,9 @@
 package bean
 
+import (
+	"fmt"
+)
+
 type Worker struct {
 	workercount int
 	sal         int
@@ -19,4 +23,7 @@ func (w Worker) getSal() int {
 }
 func (w Worker) setSal(sal int) {
 	w.sal = sal
+}
+func (w Worker) String() string {
+	return fmt.Sprintf(" Worker [workercount =%d, sal=%d]", w.workercount, w.sal)
 }
