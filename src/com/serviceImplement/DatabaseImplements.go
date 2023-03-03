@@ -175,7 +175,7 @@ func BrickRateChange(rate int) int {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
 	} */
-	return 0
+	return 1
 }
 
 func InsertUser(sitename string, role string) string {
@@ -248,7 +248,7 @@ func GetRates(ratenm string) int {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} */
-	return 0
+	return 3
 
 }
 

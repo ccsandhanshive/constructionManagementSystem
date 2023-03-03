@@ -107,9 +107,9 @@ func SandRateChangewithcommit(rate int, commit int) int {
 
 func BrickRateChangewithcommit(rate int, commit int) int {
 	if commit == 1 {
-		c = BrickRateChange(rate)
+		return BrickRateChange(rate)
 	}
-	return c
+	return 0
 }
 
 func InsertUserwithcommit(sitename string, role string, commit int) string {
@@ -174,9 +174,9 @@ func MaterialEntrywithcommit(sitename string, date string, cement_count int, san
 	var sand_amt int
 	var brick_amt int
 	var total_amt int
-	cement_amt = mc.cementCal(cement_count)
-	sand_amt = mc.sandCal(sand_count)
-	brick_amt = mc.brickCal(brick_count)
+	cement_amt = mc.CementCal(cement_count)
+	sand_amt = mc.SandCal(sand_count)
+	brick_amt = mc.BrickCal(brick_count)
 	total_amt = cement_amt + sand_amt + brick_amt
 	if commit == 1 {
 		c := MaterialEntry(sitename, date, cement_count, cement_amt, sand_count, sand_amt, brick_count, brick_amt, total_amt)
