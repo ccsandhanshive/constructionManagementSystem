@@ -13,7 +13,7 @@ var c int
 //
 //	Connection con=ConnectionProvider.provideConnection();
 //		DatabaseImplements d=new DatabaseImplements();
-func DataEntry02(sitename string, date string, no_of_labor []int, no_of_worker []int, no_of_watchman int, commit int) string {
+func DataEntry01withcommit(sitename string, date string, no_of_labor []int, no_of_worker []int, no_of_watchman int, commit int) string {
 	var l bean.Labor
 	var w bean.Worker
 	var w1 bean.Watchman

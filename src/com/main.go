@@ -27,20 +27,27 @@ type UserInterface struct {
 }
 
 func changes(userid int, password string, u UserInterface) {
-	fmt.Println("1.change in site\n2.change in date\n3.change in labor worker side\n4.change in watchman side \n5.back\nAny no for exit")
+	fmt.Println("1.change in site\n2.change in date\n3.change in labor worker on site\n4.change in watchman \n5.back\nAny no for exit")
 	var press2 int
 	fmt.Scanln(&press2)
 
 	if press2 == 1 {
-		//press := site(userid, password, s1)
+		s1 = serviceImplement.RetriveSite(userid, password) //for get supervision  sits from database
+		press := site(userid, password, s1)
+		u.press = press
+		fmt.Println("site changed to" + s1[press])
 		changes(userid, password, u)
 	} else if press2 == 2 {
 		fmt.Println("Enter date (DD-MM-YYYY)")
 		var date string
-
 		fmt.Scanln(&date)
+		u.date = date
+		changes(userid, password, u)
 	} else if press2 == 3 {
 		var days int
+		fmt.Println(labor)
+		fmt.Println(worker)
+		fmt.Println("Enter days:")
 		fmt.Scanln(&days)
 		for i := 0; i < days; i++ {
 			fmt.Println("day " + strconv.Itoa(i) + " labor:")
@@ -49,9 +56,13 @@ func changes(userid int, password string, u UserInterface) {
 			fmt.Scanln(&worker[i])
 			fmt.Println("")
 		}
+		u.days = days
+		changes(userid, password, u)
 	} else if press2 == 4 {
 		fmt.Println("Enter no of watchman")
 		fmt.Scanln(&watchman)
+		u.watchman = watchman
+		changes(userid, password, u)
 	} else if press2 == 5 {
 		mainSupervisor(userid, password, u)
 	} else {
@@ -90,28 +101,31 @@ func supervisor(userid int, password string, u UserInterface) {
 		worker = append(worker, tempInputWorker)
 		fmt.Println("")
 	}
-
+	u.labor = labor
+	u.worker = worker
 	fmt.Println("Enter no of watchman")
 	fmt.Scanln(&watchman)
+	u.watchman = watchman
 
 	fmt.Println("Enter cement count in bags")
 	var cement int
 	fmt.Scanln(&cement)
-	fmt.Println("Enter sand count in trip")
+	u.
+		fmt.Println("Enter sand count in trip")
 	var sand int
 	fmt.Scanln(&sand)
 	fmt.Println("Enter brick count")
 	var brick int
 	fmt.Scanln(&brick)
 
-	fmt.Println(serviceImplement.DataEntry02(s1[press], date, labor, worker, watchman, 0)) //for show temporary data before save in database
+	fmt.Println(serviceImplement.DataEntry01withcommit(s1[press], date, labor, worker, watchman, 0)) //for show temporary data before save in database
 	fmt.Println(serviceImplement.MaterialEntrywithcommit(s1[press], date, cement, sand, brick, 0))
 	fmt.Println("Save data \n1.yes \n2.no \n3.back")
 	var press1 int
 	fmt.Scanln(&press1)
 	if press1 == 1 {
-		//s.dataEntry(s1[press], date, labor, worker, watchman, 1)
-		//s.materialEntry(s1[press], date, cement, sand, brick, 1) //Save in database
+		serviceImplement.DataEntry01withcommit(s1[press], date, labor, worker, watchman, 1)
+		serviceImplement.MaterialEntrywithcommit(s1[press], date, cement, sand, brick, 0) //Save in database
 		mainSupervisor(userid, password, u)
 	} else if press1 == 2 {
 		changes(userid, password, u)
@@ -134,7 +148,7 @@ func passChange(userid int, password string) {
 		fmt.Println("Are you sure\n1.yes 2.no 3.back")
 		fmt.Scanln(&press)
 		if press == 1 {
-			//	m.changePass(userid, password, newpass)
+			serviceImplement.ChangePass(userid, password, newpass)
 			fmt.Println(newpass)
 			passChange(userid, password)
 		}
@@ -183,7 +197,7 @@ func (UserInterface) contractor(u UserInterface) {
 			fmt.Println("Enter Site name")
 			var sitename string
 			fmt.Scanln(&sitename)
-			//d.retriveData(sitename)
+			serviceImplement.RetriveData01(sitename)
 			u.contractor(u)
 		} else if press1 == 2 {
 			fmt.Println("Enter site name")
@@ -192,7 +206,7 @@ func (UserInterface) contractor(u UserInterface) {
 			fmt.Println("Enter date")
 			var date string
 			fmt.Scanln(&date)
-			//d.retriveData(sitename, date)
+			serviceImplement.RetriveData02(sitename, date)
 			u.contractor(u)
 		} else if press1 == 3 {
 			press = 0
@@ -238,17 +252,17 @@ func (UserInterface) contractor(u UserInterface) {
 		var ans1 int
 		fmt.Scanln(&ans1)
 		if ans == 1 {
-			//	s.laborRateChange(rate, ans1)
+			serviceImplement.LaborRateChangewithcommit(rate, ans1)
 		} else if ans == 2 {
-			//	s.workerRateChange(rate, ans1)
+			serviceImplement.WorkerRateChangewithcommit(rate, ans1)
 		} else if ans == 3 {
-			//	s.watchmanRateChange(rate, ans1)
+			serviceImplement.WatchmanRateChangewithcommit(rate, ans1)
 		} else if ans == 4 {
-			//	s.cementRateChange(rate, ans1)
+			serviceImplement.CementRateChangewithcommit(rate, ans1)
 		} else if ans == 5 {
-			//	s.sandRateChange(rate, ans1)
+			serviceImplement.SandRateChangewithcommit(rate, ans1)
 		} else if ans == 6 {
-			//	s.brickRateChange(rate, ans1)
+			serviceImplement.BrickRateChangewithcommit(rate, ans1)
 		} else if ans == 7 {
 			u.contractor(u)
 		} else {
@@ -271,7 +285,7 @@ func (UserInterface) contractor(u UserInterface) {
 			fmt.Println("Save data \n1.yes\n2.no")
 			var n int
 			fmt.Scanln(&n)
-			//s.supervisorSiteChange(username, newsite, n)
+			serviceImplement.SupervisorSiteChangewithcommit(username, newsite, n)
 			u.contractor(u)
 		} else if sp == 2 {
 			fmt.Println("Enter userid")
@@ -280,7 +294,7 @@ func (UserInterface) contractor(u UserInterface) {
 			fmt.Println("Are you sure?")
 			var commit int
 			fmt.Println(commit)
-			//s.deleteUser(userid, commit)
+			serviceImplement.DeleteUser(userid)
 			u.contractor(u)
 		} else if sp == 3 {
 			fmt.Println("Enter sitename")
@@ -292,32 +306,32 @@ func (UserInterface) contractor(u UserInterface) {
 			fmt.Println("Are you sure\n1.yes\n2.no")
 			var commit int
 			fmt.Scanln(&commit)
-			//fmt.Println(s.insertUser(sitename, role, commit))
+			fmt.Println(serviceImplement.InsertUserwithcommit(sitename, role, commit))
 			u.contractor(u)
 		} else if sp == 4 {
 			fmt.Println("1.all\n2.userid\n3.role based\n4.back\nAny no for exit")
 			var r int
 			fmt.Scanln(&r)
 			if r == 1 {
-				//s.retriveUser(1)
+				serviceImplement.RetriveUser01withcommit(1)
 				u.contractor(u)
 			} else if r == 2 {
 				fmt.Println("Enter userid")
 				var userid int
 				fmt.Scanln(&userid)
-				//s.retriveUser(userid, 1)
+				fmt.Println(serviceImplement.RetriveUser02withcommit(userid, 1))
 				u.contractor(u)
 
 			} else if r == 3 {
 				fmt.Println("Enter role")
-				var role string
+				var role int
 				fmt.Scanln(&role)
-				//s.retriveUser(role, 1)
+				fmt.Println(serviceImplement.RetriveUser02withcommit(role, 1))
 				u.contractor(u)
 			} else if r == 4 {
 				u.contractor(u)
 			} else {
-				os.Exit(1)
+				os.Exit(0)
 			}
 		} else if sp == 5 {
 			u.contractor(u)

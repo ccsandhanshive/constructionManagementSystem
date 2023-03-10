@@ -19,7 +19,7 @@ func Login(userid int, password string) string {
 	return s
 }
 
-func changePass(username int, password string, newpassword string) int {
+func ChangePass(username int, password string, newpassword string) int {
 	fmt.Println(username, password, newpassword)
 	/* try {
 		p=con.prepareStatement("update  login set password=? where userid=? and password=? ");

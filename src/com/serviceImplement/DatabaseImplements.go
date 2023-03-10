@@ -101,6 +101,7 @@ func DeleteData01(sitename string) int {
 		System.out.println("Record not exit");// TODO Auto-generated catch block
 		e.printStackTrace();
 	} */
+	fmt.Println("Data is deleted", sitename)
 	return 0
 }
 
