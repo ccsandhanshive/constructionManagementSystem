@@ -5,6 +5,7 @@ import (
 	"os"
 	"strconv"
 
+	"bitsys.sys/construction_management_system/aspect"
 	"bitsys.sys/construction_management_system/serviceImplement"
 )
 
@@ -110,8 +111,7 @@ func supervisor(userid int, password string, u UserInterface) {
 	fmt.Println("Enter cement count in bags")
 	var cement int
 	fmt.Scanln(&cement)
-	u.
-		fmt.Println("Enter sand count in trip")
+	fmt.Println("Enter sand count in trip")
 	var sand int
 	fmt.Scanln(&sand)
 	fmt.Println("Enter brick count")
@@ -383,6 +383,7 @@ func (UserInterface) login(u UserInterface) {
 }
 
 func main() {
+	aspect.ProvideConnection()
 	u := UserInterface{
 		press:    press,
 		date:     date,
