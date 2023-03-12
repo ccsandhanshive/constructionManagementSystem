@@ -3,40 +3,33 @@ package aspect
 import (
 	"database/sql"
 	"fmt"
+	"io/ioutil"
 	"log"
+	"strings"
 
 	_ "github.com/go-sql-driver/mysql"
 )
 
-/*
-import (
-
-	"database/sql"
-	"fmt"
-
-	_ "github.com/go-sql-driver/mysql"
-
-)
-*/
-func GetProperties() {
-	/*	try {
-			fis=new FileInputStream(".//resources//DBConfig.properties");
-			int x=0;
-			p=new Properties();
-			p.load(fis);
-
-
-		s[0]=p.getProperty("DriverName");
-		s[1]=p.getProperty("Url");
-		s[2]=p.getProperty("UserName");
-		s[3]=p.getProperty("Password");
-			}catch(Exception e) {
-				e.getStackTrace();
-			} */
+func GetProperties() string {
+	data, err := ioutil.ReadFile("../../resources/DBConfig.properties")
+	if err != nil {
+		fmt.Println("File reading error", err)
+	}
+	//fmt.Println("Contents of file:")
+	//fmt.Println(string(data))
+	splitedData := strings.Split(string(data), "\n")
+	//fmt.Println(splitedData)
+	Url := strings.Split(splitedData[1], "=")[1]
+	UserName := strings.Split(splitedData[2], "=")[1]
+	Password := strings.Split(splitedData[3], "=")[1]
+	Database := strings.Split(splitedData[4], "=")[1]
+	//"admin:adminPass@tcp(database-1.ccbunm4fdi2j.ap-northeast-1.rds.amazonaws.com:3306)/construction"
+	return fmt.Sprintf("%v:%v@tcp(%v)/%v", UserName, Password, Url, Database)
 }
 
 func ProvideConnection() {
-	db, err := sql.Open("mysql", "admin:adminPass@tcp(database-1.ccbunm4fdi2j.ap-northeast-1.rds.amazonaws.com:3306)/construction")
+
+	db, err := sql.Open("mysql", GetProperties())
 
 	if err != nil {
 		log.Fatal(err)
@@ -48,44 +41,4 @@ func ProvideConnection() {
 		log.Fatal(pingErr)
 	}
 	fmt.Println("Connected!")
-	/*
-	   var dbName string = "database-1"
-	   var dbUser string = "admin"
-	   var dbHost string = "database-1.ccbunm4fdi2j.ap-northeast-1.rds.amazonaws.com"
-	   var dbPort int = 3306
-	   var dbEndpoint string = fmt.Sprintf("%s:%d", dbHost, dbPort)
-	   var region string = "ap-northeast-1"
-
-	   cfg, err := config.LoadDefaultConfig(context.TODO())
-
-	   	if err != nil {
-	   		panic("configuration error: " + err.Error())
-	   	}
-
-	   authenticationToken, err := auth.BuildAuthToken(
-
-	   	context.TODO(), dbEndpoint, region, dbUser, cfg.Credentials)
-
-	   	if err != nil {
-	   		panic("failed to create authentication token: " + err.Error())
-	   	}
-
-	   dsn := fmt.Sprintf("%s:%s@tcp(%s)/%s?tls=true&allowCleartextPasswords=true",
-
-	   	dbUser, authenticationToken, dbEndpoint, dbName,
-
-	   )
-
-	   db, err := sql.Open("mysql", dsn)
-
-	   	if err != nil {
-	   		panic(err)
-	   	}
-
-	   err = db.Ping()
-
-	   	if err != nil {
-	   		fmt.Println(err)
-	   	}
-	*/
 }
