@@ -43,6 +43,7 @@ func DataEntry01(sitename string, date string, no_of_labor int, labor_amt int, n
 	req, resp := rdsdataservice_client.ExecuteStatementRequest(&rdsdataservice.ExecuteStatementInput{
 		Database:    aws.String("construction"),
 		ResourceArn: aws.String("arn:aws:rds:ap-northeast-1:496561683912:db:database-1"),
+		SecretArn:   aws.String("arn:aws:secretsmanager:ap-northeast-1:496561683912:secret:mysql-eUwcxq"),
 		Sql:         aws.String(SQLStatement),
 	})
 
