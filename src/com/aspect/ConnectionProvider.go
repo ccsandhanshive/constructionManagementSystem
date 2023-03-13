@@ -27,7 +27,7 @@ func GetProperties() string {
 	return fmt.Sprintf("%v:%v@tcp(%v)/%v", UserName, Password, Url, Database)
 }
 
-func ProvideConnection() {
+func ProvideConnection() *sql.DB {
 
 	db, err := sql.Open("mysql", GetProperties())
 
@@ -41,4 +41,5 @@ func ProvideConnection() {
 		log.Fatal(pingErr)
 	}
 	fmt.Println("Connected!")
+	return db
 }

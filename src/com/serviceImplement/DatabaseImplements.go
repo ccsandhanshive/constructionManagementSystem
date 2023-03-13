@@ -1,6 +1,12 @@
 package serviceImplement
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/rdsdataservice"
+)
 
 type DatabaseImplements struct {
 	/*
@@ -13,11 +19,39 @@ type DatabaseImplements struct {
 	userid int
 }
 
-//Connection con=ConnectionProvider.provideConnection();
-
 // @Override
 func DataEntry01(sitename string, date string, no_of_labor int, labor_amt int, no_of_worker int, worker_amt int, no_of_watchman int, watchman_amt int, total_amt int) int {
-	c := 1
+	//con := aspect.ProvideConnection()
+	// Initialize a session in us-east-2
+	sess, _ := session.NewSession(&aws.Config{
+		Region: aws.String("ap-northeast-1")},
+	)
+
+	// Sending a request using the ExecuteStatementRequest method.
+
+	SQLStatement := `CREATE TABLE Persons (
+        PersonID int,
+        LastName varchar(255),
+        FirstName varchar(255),
+        Address varchar(255),
+        City varchar(255)
+    );`
+
+	// Create RDS service client
+	rdsdataservice_client := rdsdataservice.New(sess)
+
+	req, resp := rdsdataservice_client.ExecuteStatementRequest(&rdsdataservice.ExecuteStatementInput{
+		Database:    aws.String("construction"),
+		ResourceArn: aws.String("arn:aws:rds:ap-northeast-1:496561683912:db:database-1"),
+		Sql:         aws.String(SQLStatement),
+	})
+
+	err1 := req.Send()
+	if err1 == nil { // resp is now filled
+		fmt.Println("Response:", resp)
+	} else {
+		fmt.Println("error:", err1)
+	}
 	/*
 		try {
 			p=con.prepareStatement("insert into "+sitename+" values(?,?,?,?,?,?,?,?)");
