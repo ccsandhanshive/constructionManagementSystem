@@ -1,265 +1,325 @@
 package serviceImplement
 
 import (
+	"database/sql"
 	"fmt"
 
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/rdsdataservice"
+	"bitsys.sys/construction_management_system/aspect"
 )
 
-type DatabaseImplements struct {
-	/*
-	   	Statement s;
-
-	   PreparedStatement p;
-	   int n;
-	   ResultSet rs;
-	*/
-	userid int
-}
+var db *sql.DB = aspect.ProvideConnection()
 
 // @Override
 func DataEntry01(sitename string, date string, no_of_labor int, labor_amt int, no_of_worker int, worker_amt int, no_of_watchman int, watchman_amt int, total_amt int) int {
-	//con := aspect.ProvideConnection()
-	// Initialize a session in us-east-2
-	sess, _ := session.NewSession(&aws.Config{
-		Region: aws.String("ap-northeast-1")},
-	)
+	dataEntry := fmt.Sprintf("insert into %v values(%v,%d,%d,%d,%d,%d,%d,%d)", sitename, date, no_of_labor, labor_amt, no_of_worker, worker_amt, no_of_watchman, watchman_amt, total_amt)
+	_, err := db.Query(dataEntry)
 
-	// Sending a request using the ExecuteStatementRequest method.
-
-	SQLStatement := `CREATE TABLE Persons (
-        PersonID int,
-        LastName varchar(255),
-        FirstName varchar(255),
-        Address varchar(255),
-        City varchar(255)
-    );`
-
-	// Create RDS service client
-	rdsdataservice_client := rdsdataservice.New(sess)
-
-	req, resp := rdsdataservice_client.ExecuteStatementRequest(&rdsdataservice.ExecuteStatementInput{
-		Database:    aws.String("construction"),
-		ResourceArn: aws.String("arn:aws:rds:ap-northeast-1:496561683912:db:database-1"),
-		SecretArn:   aws.String("arn:aws:secretsmanager:ap-northeast-1:496561683912:secret:mysql-eUwcxq"),
-		Sql:         aws.String(SQLStatement),
-	})
-
-	err1 := req.Send()
-	if err1 == nil { // resp is now filled
-		fmt.Println("Response:", resp)
-	} else {
-		fmt.Println("error:", err1)
+	if err != nil {
+		fmt.Println(err)
+		return 0
 	}
-	/*
-		try {
-			p=con.prepareStatement("insert into "+sitename+" values(?,?,?,?,?,?,?,?)");
-			p.setString(1,date);
-			p.setInt(2,no_of_labor);
-			p.setInt(3,labor_amt);
-			p.setInt(4,no_of_worker);
-			p.setInt(5,worker_amt);
-			p.setInt(6,no_of_watchman);
-			p.setInt(7,watchman_amt);
-			p.setInt(8,total_amt);
-			c=p.executeUpdate();
-			System.out.println("Data inserted");
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 
-			boolean b=createSiteTable(sitename);//if table not exit then create table table name is site name
-			dataEntry(sitename,date,no_of_labor,labor_amt,no_of_worker,worker_amt,no_of_watchman,watchman_amt,total_amt); //Try to enter data again
-			//e.printStackTrace();
-		} */
-	return c
+	fmt.Print("Successfully  Inserted\n")
+	defer db.Close()
+	return 1
 }
 
 func RetriveData01(sitename string) int {
-	/* try {
-		p=con.prepareStatement("select w.date_,w.no_of_labor,w.laber_amt,w.no_of_worker,w.worker_amt,w.no_of_watchman,w.watchman_amt,w1.cement_count,w1.cement_amt,w1.sand_count,w1.sand_amt,w1.brick_count,w1.brick_amt,w.total_amt+w1.total_amount as total_amount from "+sitename+" w,"+sitename+"Material w1 where w.date_=w1.date_");
-	rs=p.executeQuery();
-	System.out.println("  date   no_of_labor laber_amt no_of_worker worker_amt no_of_watchman watchman_amt cement_count cement_amt sand_count sand_amt brick_count brick_amt total_amount");
-	while(rs.next()) {
-		System.out.println(rs.getString(1)+"      "+rs.getInt(2)+"     "+rs.getInt(3)+"      "+rs.getInt(4)+"         "+rs.getInt(5)+"       "+rs.getInt(6)+"         "+rs.getInt(7)+"          "+rs.getInt(8)+"         "+rs.getInt(9)+"          "+rs.getInt(10)+"         "+rs.getInt(11)+"         "+rs.getInt(12)+"         "+rs.getInt(13)+"        "+rs.getInt(14));
+	dataEntry := fmt.Sprintf("select w.date_,w.no_of_labor,w.laber_amt,w.no_of_worker,w.worker_amt,w.no_of_watchman,w.watchman_amt,w1.cement_count,w1.cement_amt,w1.sand_count,w1.sand_amt,w1.brick_count,w1.brick_amt,w.total_amt+w1.total_amount as total_amount from %v w, %vMaterial w1 where w.date_=w1.date_", sitename, sitename)
+	result, err := db.Query(dataEntry)
 
+	if err != nil {
+		fmt.Println(err)
+		return 0
 	}
 
-	} catch (SQLException e) {
-		createSiteTable(sitename);		//if table not exit create new table and again try to retrieve
-		retriveData(sitename);
-	return 1;
-	} */
-	fmt.Println("Data retrived using sitename", "RetriveData01")
+	for result.Next() {
+
+		var date_ string
+		var no_of_labor int
+		var laber_amt int
+		var no_of_worker int
+		var worker_amt int
+		var no_of_watchman int
+		var watchman_amt int
+		var cement_count int
+		var cement_amt int
+		var sand_count int
+		var sand_amt int
+		var brick_count int
+		var brick_amt int
+		var total_amount int
+
+		// The result object provided Scan  method
+		// to read row data, Scan returns error,
+		// if any. Here we read id and name returned.
+		err = result.Scan(&date_, &no_of_labor, &laber_amt, &no_of_worker, &worker_amt, &no_of_watchman, &watchman_amt, &cement_count, &cement_amt, &sand_count, &sand_amt, &brick_count, &brick_amt, &total_amount)
+
+		// handle error
+		if err != nil {
+			fmt.Println(err)
+			panic(err)
+		}
+
+		fmt.Printf(date_, no_of_labor, laber_amt, no_of_worker, worker_amt, no_of_watchman, watchman_amt, cement_count, cement_amt, sand_count, sand_amt, brick_count, brick_amt, total_amount)
+	}
+
+	// database object has  a method Close,
+	// which is used to free the resource.
+	// Free the resource when the function
+	// is returned.
+	defer db.Close()
 	return 1
 }
 
 func RetriveData02(sitename string, date string) int {
-	/* try {
-	p=con.prepareStatement("select\r\n" +
-			" w.date_,\r\n" +
-			"w.no_of_labor,\r\n" +
-			"w.laber_amt,\r\n" +
-			"w.no_of_worker,\r\n" +
-			"w.worker_amt,\r\n" +
-			"w.no_of_watchman,\r\n" +
-			"w.watchman_amt,\r\n" +
-			"w1.cement_count,\r\n" +
-			"w1.cement_amt,\r\n" +
-			"w1.sand_count,\r\n" +
-			"w1.sand_amt,\r\n" +
-			"w1.brick_count,\r\n" +
-			"w1.brick_amt,\r\n" +
-			"w.total_amt+w1.total_amount as total_amount \r\n" +
-			"from "+sitename+" w,"+sitename+"Material w1 where w.date_=w1.date_ and w.date_='"+date+"'");
-	rs=p.executeQuery();
-	while(rs.next()) {
-		System.out.println(rs.getString(1)+" "+rs.getInt(2)+" "+rs.getInt(3)+" "+rs.getInt(4)+" "+rs.getInt(5)+" "+rs.getInt(6)+" "+rs.getInt(7)+" "+rs.getInt(8)+" "+rs.getInt(9)+" "+rs.getInt(10)+" "+rs.getInt(11)+" "+rs.getInt(12)+" "+rs.getInt(13)+" "+rs.getInt(14));
-		c=rs.getRow();
+	dataEntry := fmt.Sprintf("select\r\n"+
+		" w.date_,\r\n"+
+		"w.no_of_labor,\r\n"+
+		"w.laber_amt,\r\n"+
+		"w.no_of_worker,\r\n"+
+		"w.worker_amt,\r\n"+
+		"w.no_of_watchman,\r\n"+
+		"w.watchman_amt,\r\n"+
+		"w1.cement_count,\r\n"+
+		"w1.cement_amt,\r\n"+
+		"w1.sand_count,\r\n"+
+		"w1.sand_amt,\r\n"+
+		"w1.brick_count,\r\n"+
+		"w1.brick_amt,\r\n"+
+		"w.total_amt+w1.total_amount as total_amount \r\n"+
+		"from %v w, %vMaterial w1 where w.date_=w1.date_ and w.date_='%v'", sitename, sitename, date)
+	result, err := db.Query(dataEntry)
+
+	if err != nil {
+		fmt.Println(err)
+		return 0
 	}
 
-	} catch (SQLException e) {
-		createSiteTable(sitename);		//if table not exit create new table and again try to retrieve
-		retriveData(sitename,date);
-		//e.printStackTrace();
-	} */
-	fmt.Println("Data retrived using sitename and date", "RetriveData02")
+	for result.Next() {
+
+		var date_ string
+		var no_of_labor int
+		var laber_amt int
+		var no_of_worker int
+		var worker_amt int
+		var no_of_watchman int
+		var watchman_amt int
+		var cement_count int
+		var cement_amt int
+		var sand_count int
+		var sand_amt int
+		var brick_count int
+		var brick_amt int
+		var total_amount int
+
+		// The result object provided Scan  method
+		// to read row data, Scan returns error,
+		// if any. Here we read id and name returned.
+		err = result.Scan(&date_, &no_of_labor, &laber_amt, &no_of_worker, &worker_amt, &no_of_watchman, &watchman_amt, &cement_count, &cement_amt, &sand_count, &sand_amt, &brick_count, &brick_amt, &total_amount)
+
+		// handle error
+		if err != nil {
+			fmt.Println(err)
+			panic(err)
+		}
+
+		fmt.Printf(date_, no_of_labor, laber_amt, no_of_worker, worker_amt, no_of_watchman, watchman_amt, cement_count, cement_amt, sand_count, sand_amt, brick_count, brick_amt, total_amount)
+	}
+
+	// database object has  a method Close,
+	// which is used to free the resource.
+	// Free the resource when the function
+	// is returned.
+	defer db.Close()
 	return 1
 }
 
 func DeleteData01(sitename string) int {
-	/* try {
-	s=con.createStatement();
-	s.executeUpdate("truncate table "+sitename);
-	} catch (SQLException e) {
-		System.out.println("Record not exit");// TODO Auto-generated catch block
-		e.printStackTrace();
-	} */
-	fmt.Println("Data is deleted", sitename)
-	return 0
+	dataEntry := fmt.Sprintf("truncate table %v", sitename)
+	_, err := db.Query(dataEntry)
+
+	if err != nil {
+		fmt.Println(err)
+		return 0
+	}
+
+	// database object has  a method Close,
+	// which is used to free the resource.
+	// Free the resource when the function
+	// is returned.
+	defer db.Close()
+	return 1
 }
 
 func DeleteData02(sitename string, date string) int {
-	/*	try {
-			s=con.createStatement();
-		    c=s.executeUpdate("delete from "+sitename+" where date_ = '"+date+"'");
-		    c=s.executeUpdate("delete from "+sitename+"Material  where date_='"+date+"'");
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}catch(Exception e1){
-				e1.printStackTrace();
-			} */
-	return 0
+	dataDelete := fmt.Sprintf("delete from %v where date_ = '%v'", sitename, date)
+	_, err := db.Query(dataDelete)
+
+	if err != nil {
+		fmt.Println(err)
+		return 0
+	}
+	dataDelete = fmt.Sprintf("delete from %vMaterial  where date_='%v'", sitename, date)
+	_, err = db.Query(dataDelete)
+
+	if err != nil {
+		fmt.Println(err)
+		return 0
+	}
+	// database object has  a method Close,
+	// which is used to free the resource.
+	// Free the resource when the function
+	// is returned.
+	defer db.Close()
+	return 1
 }
 
 func LaborRateChange(rate int) int {
-	/* try {
-	p=con.prepareStatement("update rate set labor=? ");
-	p.setInt(1,rate);
-	c=p.executeUpdate();
-	} catch (SQLException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	} */
-	return 0
+	labor_rate_change := fmt.Sprintf("update rate set labor=%d ", rate)
+	_, err := db.Query(labor_rate_change)
+
+	if err != nil {
+		fmt.Println(err)
+		return 0
+	}
+	// database object has  a method Close,
+	// which is used to free the resource.
+	// Free the resource when the function
+	// is returned.
+	defer db.Close()
+	return 1
 }
 
 func WorkerRateChange(rate int) int {
-	/* try {
-	p=con.prepareStatement("update rate set worker=? ");
-	p.setInt(1,rate);
-	c=p.executeUpdate();
-	} catch (SQLException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	} */
-	return 0
+	worker_rate_change := fmt.Sprintf("update rate set worker=%d", rate)
+	_, err := db.Query(worker_rate_change)
+
+	if err != nil {
+		fmt.Println(err)
+		return 0
+	}
+	// database object has  a method Close,
+	// which is used to free the resource.
+	// Free the resource when the function
+	// is returned.
+	defer db.Close()
+	return 1
 }
 
 func CementRateChange(rate int) int {
-	/* try {
-	p=con.prepareStatement("update rate set cement=? ");
-	p.setInt(1,rate);
-	c=p.executeUpdate();
-	} catch (SQLException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	} */
-	return 0
+	cement_rate_change := fmt.Sprintf("update rate set cement=%d ", rate)
+	_, err := db.Query(cement_rate_change)
+
+	if err != nil {
+		fmt.Println(err)
+		return 0
+	}
+	// database object has  a method Close,
+	// which is used to free the resource.
+	// Free the resource when the function
+	// is returned.
+	defer db.Close()
+	return 1
 }
 
 func SandRateChange(rate int) int {
-	/* try {
-	p=con.prepareStatement("update rate set sand=? ");
-	p.setInt(1,rate);
-	c=p.executeUpdate();
-	} catch (SQLException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	} */
-	return 0
+	sand_rate_change := fmt.Sprintf("update rate set sand=%d ", rate)
+	_, err := db.Query(sand_rate_change)
+
+	if err != nil {
+		fmt.Println(err)
+		return 0
+	}
+	// database object has  a method Close,
+	// which is used to free the resource.
+	// Free the resource when the function
+	// is returned.
+	defer db.Close()
 }
 
 func BrickRateChange(rate int) int {
-	/* try {
-	p=con.prepareStatement("update rate set brick=? where brick>0");
-	p.setInt(1,rate);
-	c=p.executeUpdate();
-	} catch (SQLException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	} */
+	sand_rate_change := fmt.Sprintf("update rate set brick=%d where brick>0", rate)
+	_, err := db.Query(sand_rate_change)
+
+	if err != nil {
+		fmt.Println(err)
+		return 0
+	}
+	// database object has  a method Close,
+	// which is used to free the resource.
+	// Free the resource when the function
+	// is returned.
+	defer db.Close()
 	return 1
 }
 
 func InsertUser(sitename string, role string) string {
-	/* try {
-		userid=retriveData()+1;								//For generate user id
-		p=con.prepareStatement("insert into login values(?,?,?,?)");
+	userid := RetriveData03() + 1
+	password := fmt.Sprintf("%v/%v/%d", sitename, role, userid)
+	insert_user := fmt.Sprintf("insert into login values(%d,%v,%v,%v)", userid, password, role, sitename)
+	_, err := db.Query(insert_user)
 
-		p.setInt(1,userid);
-		p.setString(2,sitename+"/"+role+"/"+userid);
-		p.setString(3,role);
-		p.setString(4,sitename);
-		c=p.executeUpdate();
-		 System.out.println("new user inserted");
-	} catch (SQLException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	} */
-	//return "userid="+userid+" pass= "+sitename+"/"+role+"/"+userid;
-	return "userid= 123 pass= wagholi/supervisor/123" //return userid and password for note
+	if err != nil {
+		fmt.Println(err)
+		return ""
+	}
+	// database object has  a method Close,
+	// which is used to free the resource.
+	// Free the resource when the function
+	// is returned.
+	fmt.Println("new user inserted")
+	defer db.Close()
+	return fmt.Sprintln("userid= %v pass= %v", userid, password)
 }
 
 func SupervisorSiteChange(username int, newsite string) int {
-	/* try {
-	p=con.prepareStatement("update login set sitename=? where userid=?");
-	p.setString(1,newsite);
-	p.setInt(2,username);
-	c=p.executeUpdate();
-	} catch (SQLException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	} */
-	return 0
+	supervisor_site_change := fmt.Sprintf("update login set sitename=%v where userid=%d", newsite, username)
+	_, err := db.Query(supervisor_site_change)
+
+	if err != nil {
+		fmt.Println(err)
+		return 0
+	}
+	// database object has  a method Close,
+	// which is used to free the resource.
+	// Free the resource when the function
+	// is returned.
+	defer db.Close()
 }
 
-func CustomerSiteChange(username int, password string, sitename string) int {
-	/* try {
-	p=con.prepareStatement("update login set sitename=? where userid=? and password=?" );
-	p.setString(1,sitename);
-	p.setInt(2,userid);
-	p.setString(3,password);
-	c=p.executeUpdate();
-	} catch (SQLException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	} */
-	return 0
+func CustomerSiteChange(userid int, password string, sitename string) int {
+	customer_site_change := fmt.Sprintf("update login set sitename=? where userid=? and password=?", sitename, userid, password)
+	_, err := db.Query(customer_site_change)
+
+	if err != nil {
+		fmt.Println(err)
+		return 0
+	}
+	// database object has  a method Close,
+	// which is used to free the resource.
+	// Free the resource when the function
+	// is returned.
+	defer db.Close()
+	return 1
 }
 func RetriveData03() int {
+	result, err := db.Query("select max(userid) from login")
+
+	if err != nil {
+		fmt.Println(err)
+		return 0
+	}
+
+	result.Next(){
+		
+	}
+	// database object has  a method Close,
+	// which is used to free the resource.
+	// Free the resource when the function
+	// is returned.
+	defer db.Close()
+	return 1
 	/* try {
 		p=con.prepareStatement("select max(userid) from login");
 	rs=p.executeQuery();
