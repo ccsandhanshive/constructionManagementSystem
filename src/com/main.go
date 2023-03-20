@@ -5,7 +5,6 @@ import (
 	"os"
 	"strconv"
 
-	"bitsys.sys/construction_management_system/aspect"
 	"bitsys.sys/construction_management_system/serviceImplement"
 )
 
@@ -383,7 +382,7 @@ func (UserInterface) login(u UserInterface) {
 }
 
 func main() {
-	aspect.ProvideConnection()
+	//aspect.ProvideConnection()
 	u := UserInterface{
 		press:    press,
 		date:     date,

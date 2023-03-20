@@ -12,7 +12,7 @@ func CreateMaterialCal() MaterialCal {
 // DatabaseImplements db=new DatabaseImplements();
 func (MaterialCal) CementCal(count int) int {
 	if count >= 0 {
-		count := count * 90 //GetRates("cement")
+		count := count * GetRates("cement")
 		return count
 	} else {
 		fmt.Println("Cement count must be positive value")
@@ -21,7 +21,7 @@ func (MaterialCal) CementCal(count int) int {
 }
 func (MaterialCal) SandCal(count int) int {
 	if count >= 0 {
-		count := count * 350 //GetRates("sand")
+		count := count * GetRates("sand")
 		return count
 	} else {
 		fmt.Println("Sand count must be positive value")

@@ -23,7 +23,6 @@ func GetProperties() string {
 	UserName := strings.Split(splitedData[2], "=")[1]
 	Password := strings.Split(splitedData[3], "=")[1]
 	Database := strings.Split(splitedData[4], "=")[1]
-	//"admin:adminPass@tcp(database-1.ccbunm4fdi2j.ap-northeast-1.rds.amazonaws.com:3306)/construction"
 	return fmt.Sprintf("%v:%v@tcp(%v)/%v", UserName, Password, Url, Database)
 }
 

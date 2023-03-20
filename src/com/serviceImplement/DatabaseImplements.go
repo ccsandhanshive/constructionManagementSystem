@@ -310,193 +310,237 @@ func RetriveData03() int {
 		fmt.Println(err)
 		return 0
 	}
+	var userid int
 
-	result.Next(){
-		
+	for result.Next() {
+
+		err := result.Scan(&userid)
+
+		if err != nil {
+			fmt.Println(err)
+			return 0
+		}
 	}
 	// database object has  a method Close,
 	// which is used to free the resource.
 	// Free the resource when the function
 	// is returned.
-	defer db.Close()
-	return 1
-	/* try {
-		p=con.prepareStatement("select max(userid) from login");
-	rs=p.executeQuery();
-	rs.next();
-	c=rs.getInt(1);
-
-
-	} catch (SQLException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	} */
-	return 0
+	//defer db.Close()
+	return userid
 }
 
 func GetRates(ratenm string) int {
-	/*	try {
-			p=con.prepareStatement("select * from rate");
-			rs=p.executeQuery();
-			rs.next();
-			c=rs.getInt(ratenm);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} */
-	return 3
+	result, err := db.Query("select %v from rate", ratenm)
 
+	if err != nil {
+		fmt.Println(err)
+		return 0
+	}
+	var rate int
+
+	for result.Next() {
+
+		err := result.Scan(&rate)
+
+		if err != nil {
+			fmt.Println(err)
+			return 0
+		}
+	}
+	// database object has  a method Close,
+	// which is used to free the resource.
+	// Free the resource when the function
+	// is returned.
+	//defer db.Close()
+	return rate
 }
 
 func RetriveSite(userid int, pass string) []string {
-	s := []string{"wagholi", "rajpark", "chikhali", "tathawade"}
-	/* try {
-		p=con.prepareStatement("select sitename from login where userid=? and password=?");
-		p.setInt(1,userid);
-		p.setString(2,pass);
-		rs=p.executeQuery();
-		rs.next();
-	 s=rs.getString(1);
-	} catch (SQLException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	} */
-	return s
+	result, err := db.Query("select sitename from login where userid=%d and password=%v", userid, pass)
+
+	if err != nil {
+		fmt.Println(err)
+		return []
+	}
+	var list_of_site []string
+
+	for result.Next() {
+		var site string
+
+		err := result.Scan(&site)
+
+		if err != nil {
+			fmt.Println(err)
+			return ""
+		}
+	}
+	list_of_site = append(list_of_site,site)
+	// database object has  a method Close,
+	// which is used to free the resource.
+	// Free the resource when the function
+	// is returned.
+	//defer db.Close()
+	return list_of_site
 }
 func RetriveSite01(userid int, pass string) string {
-	/* try {
-		p=con.prepareStatement("select sitename from login where userid=? and password=?");
-		p.setInt(1,userid);
-		p.setString(2,pass);
-		rs=p.executeQuery();
-		rs.next();
-	 s=rs.getString(1);
-	} catch (SQLException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	} */
-	return "wagholi"
+	result, err := db.Query("select sitename from login where userid=%d and password=%v", userid, pass)
+
+	if err != nil {
+		fmt.Println(err)
+		return ""
+	}
+	var site string
+
+	for result.Next() {
+
+		err := result.Scan(&site)
+
+		if err != nil {
+			fmt.Println(err)
+			return ""
+		}
+	}
+
+	// database object has  a method Close,
+	// which is used to free the resource.
+	// Free the resource when the function
+	// is returned.
+	//defer db.Close()
+	return site
 }
 
 func WatchmanRateChange(rate int) int {
-	/* try {
-	p=con.prepareStatement("update rate set watchman=? ");
-	p.setInt(1,rate);
-	c=p.executeUpdate();
-	} catch (SQLException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	} */
-	return 0
+	result, err := db.Query("update rate set watchman=%d ", rate)
+
+	if err != nil {
+		fmt.Println(err)
+		return 0
+	}
+
+	// database object has  a method Close,
+	// which is used to free the resource.
+	// Free the resource when the function
+	// is returned.
+	//defer db.Close()
+	return 1
 }
 
 func DeleteUser(userid int) int {
-	/* try {
-		s=con.createStatement();
-	    c=s.executeUpdate("delete from login where userid ="+userid);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}catch(Exception e1){
-			e1.printStackTrace();
-		} */
-	return 0
+	result, err := db.Query("delete from login where userid ="+userid)
+
+	if err != nil {
+		fmt.Println(err)
+		return 0
+	}
+
+	// database object has  a method Close,
+	// which is used to free the resource.
+	// Free the resource when the function
+	// is returned.
+	//defer db.Close()
+	return 1
 }
 
 func RetriveUser01() string {
-	//String s=null;
-	/* try {
-		p=con.prepareStatement("select userid,role,sitename from login ");
-		rs=p.executeQuery();
-		while(rs.next()) {
-			System.out.println("userid= "+rs.getInt(1)+"\nrole = "+rs.getString(2)+"\nsitename = "+rs.getString(3));
-		}
-	} catch (SQLException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	} */
-	return "123"
+	result, err := db.Query("select userid,role,sitename from login ")
+
+	if err != nil {
+		fmt.Println(err)
+		return 0
+	}
+	var userid,role,sitename string
+	for result.Next(){
+		result.Scan(&userid,&role,&sitename)
+
+		fmt.Println("userid= "+userid+"\nrole = "+role+"\nsitename = "+sitename)
+	}
+
+	// database object has  a method Close,
+	// which is used to free the resource.
+	// Free the resource when the function
+	// is returned.
+	//defer db.Close()
+	return userid
 }
 
 func RetriveUser02(userid int) string {
-	/*	String s=null;
-		try {
-			p=con.prepareStatement("select userid,role,sitename from login where userid=?");
-			p.setInt(1,userid);
-			rs=p.executeQuery();
-			while(rs.next()) {
-				System.out.println("userid= "+rs.getInt(1)+"\nrole = "+rs.getString(2)+"\nsitename = "+rs.getString(3));
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} */
-	return "123"
+	result, err := db.Query("select userid,role,sitename from login where userid=%d",userid)
+
+	if err != nil {
+		fmt.Println(err)
+		return ""
+	}
+	var userid,role,sitename string
+	for result.Next(){
+		result.Scan(&userid,&role,&sitename)
+
+		fmt.Println("userid= "+userid+"\nrole = "+role+"\nsitename = "+sitename)
+	}
+
+	// database object has  a method Close,
+	// which is used to free the resource.
+	// Free the resource when the function
+	// is returned.
+	//defer db.Close()
+	return userid
 }
 
 func RetriveUser03(role string) string {
-	/*String s=null;
-	try {
-		p=con.prepareStatement("select userid,role,sitename from login where role=?");
-		p.setInt(1,userid);
-		rs=p.executeQuery();
-		while(rs.next()) {
-			System.out.println("userid= "+rs.getInt(1)+"\nrole = "+rs.getString(2)+"\nsitename = "+rs.getString(3));
-		}
-	} catch (SQLException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	} */
-	return "123"
+	result, err := db.Query("select userid,role,sitename from login where role=%v",role)
+
+	if err != nil {
+		fmt.Println(err)
+		return ""
+	}
+	var userid,role,sitename string
+	for result.Next(){
+		result.Scan(&userid,&role,&sitename)
+
+		fmt.Println("userid= "+userid+"\nrole = "+role+"\nsitename = "+sitename)
+	}
+
+	// database object has  a method Close,
+	// which is used to free the resource.
+	// Free the resource when the function
+	// is returned.
+	//defer db.Close()
+	return userid
 }
 
 func CreateSiteTable(sitename string) bool {
-	/* boolean b=false;
-	try {
-		p=con.prepareStatement("create table "+sitename+"(date_ varchar2(30),no_of_labor int,laber_amt int,no_of_worker int,worker_amt int,no_of_watchman int,watchman_amt int,total_amt int)");
-		b=p.execute();
-	} catch (SQLException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	} */
+	_, err := db.Query("create table "+sitename+"(date_ varchar(30),no_of_labor int,laber_amt int,no_of_worker int,worker_amt int,no_of_watchman int,watchman_amt int,total_amt int)")
+
+	if err != nil {
+		fmt.Println(err)
+		return false
+	}
+
+	//defer db.Close()
 	return true
 }
 
 func MaterialEntry(sitename string, date string, cement_count int, cement_amt int, sand_count int, sand_amt int, brick_count int, brick_amt int, total_amt int) int {
-	/* c=0;
-	System.out.println("In materialEntry "+sitename+"Material");
+	_, err := db.Query("insert into "+sitename+"Material values(%v,%d,%d,%d,%d,%d,%d,%d)",date,cement_count,cement_amt,sand_count,sand_amt,brick_count,brick_amt,total_amt)
 
-		try {
-			p=con.prepareStatement("insert into "+sitename+"Material values(?,?,?,?,?,?,?,?)");
-			p.setString(1,date);
-			p.setInt(2,cement_count);
-			p.setInt(3,cement_amt);
-			p.setInt(4,sand_count);
-			p.setInt(5,sand_amt);
-			p.setInt(6,brick_count);
-			p.setInt(7,brick_amt);
-			p.setInt(8,total_amt);
-			c=p.executeUpdate();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+	if err != nil {
+		if createMaterialTable(sitename+"Material") {
+			MaterialEntry(sitename,date,cement_count,cement_amt,sand_count,sand_amt,brick_count,brick_amt,total_amt)
+		}else {
+			return 0
+		}
+		
+	}
 
-		boolean b=createMaterialTable(sitename+"Material");//if table not exit then create table table name is site name
-
-		materialEntry(sitename,date,cement_count,cement_amt,sand_count,sand_amt,brick_count,brick_amt,total_amt); //Try to enter data again
-
-			//e.printStackTrace();
-		} */
-	return 0
+	//defer db.Close()
+	return 1
 }
 func CreateMaterialTable(sitename string) bool {
-	/* System.out.println("In create "+sitename);
-	boolean b=false;
-	try {
-		p=con.prepareStatement("create table "+sitename+"(date_ varchar2(30),cement_count int,cement_amt int,sand_count int,sand_amt int,brick_count int,brick_amt int,total_amount int)");
-		b=p.execute();
-	} catch (SQLException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	} */
+	_, err := db.Query("create table "+sitename+"(date_ varchar(30),cement_count int,cement_amt int,sand_count int,sand_amt int,brick_count int,brick_amt int,total_amount int)")
+
+	if err != nil {
+		return false
+	}
+
+	//defer db.Close()
 	return true
 }
