@@ -33,7 +33,7 @@ func ProvideConnection() *sql.DB {
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer db.Close()
+//	defer db.Close()
 	//Call db.Ping() to check the connection
 	pingErr := db.Ping()
 	if pingErr != nil {

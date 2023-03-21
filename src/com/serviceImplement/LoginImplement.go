@@ -1,9 +1,13 @@
 package serviceImplement
 
-import "fmt"
+import (
+	"fmt"
 
+	"bitsys.sys/construction_management_system/aspect"
+)
 func Login(userid int, password string) string {
-	result, err := db.Query("select userid,password,role from login where userid=%d and password= %v", userid, password)
+	db  = aspect.ProvideConnection()
+	result, err := db.Query(fmt.Sprintf("select userid,password,role from login where userid=%d and password= %v", userid, password))
 
 	if err != nil {
 		fmt.Print(err)
