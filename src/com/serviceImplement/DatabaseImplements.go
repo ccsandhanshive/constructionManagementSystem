@@ -20,7 +20,7 @@ func DataEntry01(sitename string, date string, no_of_labor int, labor_amt int, n
 	}
 
 	fmt.Print("Successfully  Inserted\n")
-	defer db.Close()
+	//defer db.Close()
 	return 1
 }
 
@@ -68,7 +68,7 @@ func RetriveData01(sitename string) int {
 	// which is used to free the resource.
 	// Free the resource when the function
 	// is returned.
-	defer db.Close()
+	//defer db.Close()
 	return 1
 }
 
@@ -187,7 +187,7 @@ func LaborRateChange(rate int) int {
 	// which is used to free the resource.
 	// Free the resource when the function
 	// is returned.
-	defer db.Close()
+	//defer db.Close()
 	return 1
 }
 
@@ -203,7 +203,7 @@ func WorkerRateChange(rate int) int {
 	// which is used to free the resource.
 	// Free the resource when the function
 	// is returned.
-	defer db.Close()
+	//defer db.Close()
 	return 1
 }
 
@@ -219,7 +219,7 @@ func CementRateChange(rate int) int {
 	// which is used to free the resource.
 	// Free the resource when the function
 	// is returned.
-	defer db.Close()
+	//defer db.Close()
 	return 1
 }
 
@@ -235,7 +235,7 @@ func SandRateChange(rate int) int {
 	// which is used to free the resource.
 	// Free the resource when the function
 	// is returned.
-	defer db.Close()
+	//defer db.Close()
 	return 1
 }
 
@@ -251,7 +251,7 @@ func BrickRateChange(rate int) int {
 	// which is used to free the resource.
 	// Free the resource when the function
 	// is returned.
-	defer db.Close()
+	//defer db.Close()
 	return 1
 }
 
