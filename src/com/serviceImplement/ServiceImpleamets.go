@@ -147,24 +147,24 @@ func DeleteUserwithcommit(userid int, commit int) int {
 	return c
 }
 
-func RetriveUser01withcommit(commit int) string {
+func RetriveUser01withcommit(commit int) int {
 	if commit == 1 {
 		return RetriveUser01()
 	}
-	return ""
+	return 0
 }
-func RetriveUser02withcommit(userid int, commit int) string {
+func RetriveUser02withcommit(userid int, commit int) int {
 	if commit == 1 {
 		return RetriveUser02(userid)
 	}
-	return ""
+	return 0
 }
 
-func RetriveUser03withcommit(role string, commit int) string {
+func RetriveUser03withcommit(role string, commit int) int {
 	if commit == 1 {
 		return RetriveUser03(role)
 	}
-	return ""
+	return 0
 }
 
 var mc MaterialCal = CreateMaterialCal()

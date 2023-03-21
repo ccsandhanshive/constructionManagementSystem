@@ -131,7 +131,7 @@ func RetriveData02(sitename string, date string) int {
 	// which is used to free the resource.
 	// Free the resource when the function
 	// is returned.
-	defer db.Close()
+	//defer db.Close()
 	return 1
 }
 
@@ -148,7 +148,7 @@ func DeleteData01(sitename string) int {
 	// which is used to free the resource.
 	// Free the resource when the function
 	// is returned.
-	defer db.Close()
+	//defer db.Close()
 	return 1
 }
 
@@ -171,7 +171,7 @@ func DeleteData02(sitename string, date string) int {
 	// which is used to free the resource.
 	// Free the resource when the function
 	// is returned.
-	defer db.Close()
+	//defer db.Close()
 	return 1
 }
 
@@ -236,6 +236,7 @@ func SandRateChange(rate int) int {
 	// Free the resource when the function
 	// is returned.
 	defer db.Close()
+	return 1
 }
 
 func BrickRateChange(rate int) int {
@@ -269,7 +270,7 @@ func InsertUser(sitename string, role string) string {
 	// Free the resource when the function
 	// is returned.
 	fmt.Println("new user inserted")
-	defer db.Close()
+	//defer db.Close()
 	return fmt.Sprintln("userid= %v pass= %v", userid, password)
 }
 
@@ -285,7 +286,8 @@ func SupervisorSiteChange(username int, newsite string) int {
 	// which is used to free the resource.
 	// Free the resource when the function
 	// is returned.
-	defer db.Close()
+	//defer db.Close()
+	return 1
 }
 
 func CustomerSiteChange(userid int, password string, sitename string) int {
@@ -300,7 +302,7 @@ func CustomerSiteChange(userid int, password string, sitename string) int {
 	// which is used to free the resource.
 	// Free the resource when the function
 	// is returned.
-	defer db.Close()
+	//defer db.Close()
 	return 1
 }
 func RetriveData03() int {
@@ -360,7 +362,7 @@ func RetriveSite(userid int, pass string) []string {
 
 	if err != nil {
 		fmt.Println(err)
-		return []
+		return nil
 	}
 	var list_of_site []string
 
@@ -371,10 +373,11 @@ func RetriveSite(userid int, pass string) []string {
 
 		if err != nil {
 			fmt.Println(err)
-			return ""
+			return nil
 		}
-	}
+	
 	list_of_site = append(list_of_site,site)
+}
 	// database object has  a method Close,
 	// which is used to free the resource.
 	// Free the resource when the function
@@ -410,7 +413,7 @@ func RetriveSite01(userid int, pass string) string {
 }
 
 func WatchmanRateChange(rate int) int {
-	result, err := db.Query("update rate set watchman=%d ", rate)
+	_, err := db.Query("update rate set watchman=%d ", rate)
 
 	if err != nil {
 		fmt.Println(err)
@@ -426,7 +429,7 @@ func WatchmanRateChange(rate int) int {
 }
 
 func DeleteUser(userid int) int {
-	result, err := db.Query("delete from login where userid ="+userid)
+_, err := db.Query("delete from login where userid =%d",userid)
 
 	if err != nil {
 		fmt.Println(err)
@@ -441,18 +444,19 @@ func DeleteUser(userid int) int {
 	return 1
 }
 
-func RetriveUser01() string {
+func RetriveUser01() int {
 	result, err := db.Query("select userid,role,sitename from login ")
 
 	if err != nil {
 		fmt.Println(err)
 		return 0
 	}
-	var userid,role,sitename string
+	var role,sitename string
+	var userid int
 	for result.Next(){
 		result.Scan(&userid,&role,&sitename)
 
-		fmt.Println("userid= "+userid+"\nrole = "+role+"\nsitename = "+sitename)
+		fmt.Println("userid= %d\nrole = "+role+"\nsitename = "+sitename,userid)
 	}
 
 	// database object has  a method Close,
@@ -463,18 +467,18 @@ func RetriveUser01() string {
 	return userid
 }
 
-func RetriveUser02(userid int) string {
+func RetriveUser02(userid int) int {
 	result, err := db.Query("select userid,role,sitename from login where userid=%d",userid)
 
 	if err != nil {
 		fmt.Println(err)
-		return ""
+		return 0
 	}
-	var userid,role,sitename string
+	var role,sitename string
 	for result.Next(){
 		result.Scan(&userid,&role,&sitename)
 
-		fmt.Println("userid= "+userid+"\nrole = "+role+"\nsitename = "+sitename)
+		fmt.Println("userid=%d \nrole = "+role+"\nsitename = "+sitename,userid)
 	}
 
 	// database object has  a method Close,
@@ -485,18 +489,19 @@ func RetriveUser02(userid int) string {
 	return userid
 }
 
-func RetriveUser03(role string) string {
+func RetriveUser03(role string) int {
 	result, err := db.Query("select userid,role,sitename from login where role=%v",role)
 
 	if err != nil {
 		fmt.Println(err)
-		return ""
+		return 0
 	}
-	var userid,role,sitename string
+	var sitename string
+	var userid int
 	for result.Next(){
 		result.Scan(&userid,&role,&sitename)
 
-		fmt.Println("userid= "+userid+"\nrole = "+role+"\nsitename = "+sitename)
+		fmt.Println("userid= %d\nrole = "+role+"\nsitename = "+sitename,userid)
 	}
 
 	// database object has  a method Close,
@@ -523,7 +528,7 @@ func MaterialEntry(sitename string, date string, cement_count int, cement_amt in
 	_, err := db.Query("insert into "+sitename+"Material values(%v,%d,%d,%d,%d,%d,%d,%d)",date,cement_count,cement_amt,sand_count,sand_amt,brick_count,brick_amt,total_amt)
 
 	if err != nil {
-		if createMaterialTable(sitename+"Material") {
+		if CreateMaterialTable(sitename+"Material") {
 			MaterialEntry(sitename,date,cement_count,cement_amt,sand_count,sand_amt,brick_count,brick_amt,total_amt)
 		}else {
 			return 0
